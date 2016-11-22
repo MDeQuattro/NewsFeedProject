@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+
+    <!-- Import JQuery -->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <style type="text/css">
+        :root #content > #right > .dose > .dosesinle,
+        :root #content > #center > .dose > .dosesingle,
+        :root #header + #content > #left > #rlblock_left
+        { display: none !important;}
+    </style>
+    <style>
+
+        body {
+            max-width: 800px;
+            margin: auto;
+            text-align: center;
+        }
+        /* reset styling */
+        body * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #header * {
+            display: inline-block;
+            vertical-align: middle;
+            padding-left: 1em;
+            padding-right: 1em;
+        }
+
+        .item {
+            border: 1px solid red;
+            padding: 1em;
+            margin: 0.5em;
+            text-align: left;
+        }
+
+        .item h2 {
+            font-size: 120%;
+            padding-bottom: 0.2em;
+        }
+
+        /* not used right now because the descriptions are the same as the titles */
+        .item p {
+            padding-top: 0.2em;
+        }
+    </style>
+
+    <script>
+        //this forces js to conform to some rules, like declaring variables with var
+        "use strict";
+
+        window.onload = init;
+
+        function init(){
+            var url = "http://espn.go.com/espn/rss/mlb/news";
+            //var url = "http://www.npr.org/rss/rss.php;
+
+            $.ajax({
+                type: "GET",
+                url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(url),
+                dataType: 'json',
+                error: function(){
+                    alert('Unable to load feed. Incorrect path or invalid feed.');
+                },
+                success: function(xml){
+                    var feed = xml.responseData.feed;
+                    console.log(feed);
+                    parseEntries(feed.entries);
+                }
+            });
+        }
+
+        function parseEntries(values){
+            var html = "";
+            values.forEach(function (feed){
+                console.log(feed);
+                var title = feed.title;
+                console.log(title);
+                var description =  feed.content;
+                var linbk = feed.link;
+                var pubDate = feed.publishedDate;
+
+                //present as html
+                var line = '<div class="item>';
+                line += "<h2>"+title+"</h2>";
+                line += '<p><i>'+pubDate+'</i> - <a href="'+link+'" target="_blank">See original</a></p>';
+
+                //title and description always the same
+                line += "<p>"+description+"</p>";
+                line += "</div>";
+
+                html += line;
+            });
+            document.querySelector("#content").innerHTML = html;
+        }
+
+        function isChecked(box) {
+            return box.checked;
+        }
+    </script>
+</head>
+<body>
+
+</body>
+</html>
