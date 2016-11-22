@@ -51,21 +51,23 @@
     </style>
 
     <script>
-        //this forces js to conform to some rules, like declaring variables with var
+
+        //this forces javascript to conform to some rules, like declaring variables with var
         "use strict";
 
         window.onload = init;
 
         function init(){
-            var url = "http://espn.go.com/espn/rss/mlb/news";
-            //var url = "http://www.npr.org/rss/rss.php;
+            var url = 'http://www.npr.org/rss/rss.php';
+//            var url = 'http://apps.shareholder.com/rss/rss.aspx?channels=632&companyid=YHOO&sh_auth=3111228561%2E0%2E0%2E42689%2Efaf3d56dd6df32f02d2f743316906688';
+//            var url = 'http://www.espn.com/espn/rss/news';
 
             $.ajax({
                 type: "GET",
                 url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(url),
                 dataType: 'json',
                 error: function(){
-                    alert('Unable to load feed. Incorrect path or invalid feed.');
+                    alert('Unable to load feed, Incorrect path or invalid feed');
                 },
                 success: function(xml){
                     var feed = xml.responseData.feed;
@@ -75,36 +77,57 @@
             });
         }
 
-        function parseEntries(values){
+        /**
+         *
+         * @param values an array containing each feed object.
+         */
+        function parseEntries(values) {
             var html = "";
-            values.forEach(function (feed){
+            values.forEach(function (feed) {
                 console.log(feed);
                 var title = feed.title;
                 console.log(title);
-                var description =  feed.content;
-                var linbk = feed.link;
+                var description = feed.content;
+                var link = feed.link;
                 var pubDate = feed.publishedDate;
 
-                //present as html
-                var line = '<div class="item>';
+                //present the item as HTML
+                var line = '<div class="item">';
                 line += "<h2>"+title+"</h2>";
                 line += '<p><i>'+pubDate+'</i> - <a href="'+link+'" target="_blank">See original</a></p>';
-
-                //title and description always the same
+                //title and description are always the same (for some reason) so I'm only including one
                 line += "<p>"+description+"</p>";
                 line += "</div>";
 
                 html += line;
             });
             document.querySelector("#content").innerHTML = html;
+
+            $("#content").fadeIn(1000);
         }
 
         function isChecked(box) {
             return box.checked;
         }
+
     </script>
 </head>
 <body>
 
+    <div id="header">
+        <h1>MLB News</h1>
+    </div>
+
+    <form>
+        <input type="checkbox" onclick="isChecked(this)" id="espn">
+        <label for="espn">ESPN</label>
+
+        <input type="checkbox" id="npr" checked>
+        <label for="npr">NPR</label>
+    </form>
+
+    <div id="content">
+
+    </div>
 </body>
 </html>
