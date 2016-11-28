@@ -6,13 +6,21 @@
 
     <!-- Import JQuery -->
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
+    <!-- Import JavScript File-->
+    <script src="scripts.js"></script>
+
+    <!-- Import Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <style type="text/css">
-        :root #content > #right > .dose > .dosesinle,
-        :root #content > #center > .dose > .dosesingle,
+
         :root #header + #content > #left > #rlblock_left
-        { display: none !important;}
+        { display: none !important; }
     </style>
     <style>
+
 
         body {
             max-width: 800px;
@@ -33,7 +41,7 @@
         }
 
         .item {
-            border: 1px solid red;
+            border: 1px solid cornflowerblue;
             padding: 1em;
             margin: 0.5em;
             text-align: left;
@@ -48,86 +56,72 @@
         .item p {
             padding-top: 0.2em;
         }
+
     </style>
-
-    <script>
-
-        //this forces javascript to conform to some rules, like declaring variables with var
-        "use strict";
-
-        window.onload = init;
-
-        function init(){
-            var url = 'http://www.npr.org/rss/rss.php';
-//            var url = 'http://apps.shareholder.com/rss/rss.aspx?channels=632&companyid=YHOO&sh_auth=3111228561%2E0%2E0%2E42689%2Efaf3d56dd6df32f02d2f743316906688';
-//            var url = 'http://www.espn.com/espn/rss/news';
-
-            $.ajax({
-                type: "GET",
-                url: document.location.protocol + '//ajax.googleapis.com/ajax/services/feed/load?v=1.0&num=1000&callback=?&q=' + encodeURIComponent(url),
-                dataType: 'json',
-                error: function(){
-                    alert('Unable to load feed, Incorrect path or invalid feed');
-                },
-                success: function(xml){
-                    var feed = xml.responseData.feed;
-                    console.log(feed);
-                    parseEntries(feed.entries);
-                }
-            });
-        }
-
-        /**
-         *
-         * @param values an array containing each feed object.
-         */
-        function parseEntries(values) {
-            var html = "";
-            values.forEach(function (feed) {
-                console.log(feed);
-                var title = feed.title;
-                console.log(title);
-                var description = feed.content;
-                var link = feed.link;
-                var pubDate = feed.publishedDate;
-
-                //present the item as HTML
-                var line = '<div class="item">';
-                line += "<h2>"+title+"</h2>";
-                line += '<p><i>'+pubDate+'</i> - <a href="'+link+'" target="_blank">See original</a></p>';
-                //title and description are always the same (for some reason) so I'm only including one
-                line += "<p>"+description+"</p>";
-                line += "</div>";
-
-                html += line;
-            });
-            document.querySelector("#content").innerHTML = html;
-
-            $("#content").fadeIn(1000);
-        }
-
-        function isChecked(box) {
-            return box.checked;
-        }
-
-    </script>
 </head>
-<body>
+
+<body onload="init()">
 
     <div id="header">
-        <h1>MLB News</h1>
+        <h1>News Feed</h1>
     </div>
 
     <form>
-        <input type="checkbox" onclick="isChecked(this)" id="espn">
-        <label for="espn">ESPN</label>
+        <input type="checkbox" onchange="addRemoveNews(this, usnews_url)" id="usnews" checked>
+        <label for="usnews">US News</label>
 
-        <input type="checkbox" id="npr" checked>
-        <label for="npr">NPR</label>
+        <input type="checkbox" onchange="addRemoveNews(this, worldnews_url)" id="worldnews">
+        <label for="worldnews">World News</label>
+
+        <input type="checkbox" onchange="addRemoveNews(this, sports_url)" id="sports">
+        <label for="sports">Sports</label>
+
+        <input type="checkbox" onchange="addRemoveNews(this, weather_url)" id="weather">
+        <label for="weather">Weather</label>
+
+        <input type="checkbox" onchange="addRemoveNews(this, technology_url)" id="technology">
+        <label for="technology">Technology</label>
+
+        <br>
+        <br>
     </form>
 
-    <div id="content">
+    <p id="lastVisit"></p>
 
+    <div id="usnewsdiv">
+        <h2>US News</h2>
+        <div id="content_usnews"></div>
     </div>
+
+    <br>
+
+    <div id="worldnewsdiv">
+        <h2>World News</h2>
+        <div id="content_worldnews"></div>
+    </div>
+
+    <br>
+
+    <div id="sportsdiv">
+        <h2>Sports</h2>
+        <div id="content_sports"></div>
+    </div>
+
+    <br>
+
+    <div id="weatherdiv">
+        <h2>Weather</h2>
+        <div id="content_weather"></div>
+    </div>
+
+    <br>
+
+    <div id="technologydiv">
+        <h2>Technology</h2>
+        <div id="content_technology"></div>
+    </div>
+
+    <br>
+
 </body>
 </html>
