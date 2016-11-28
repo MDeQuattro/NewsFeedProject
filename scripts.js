@@ -13,13 +13,13 @@ const technology_url = "http://feeds.bbci.co.uk/news/technology/rss.xml?edition=
 
 
 function init(){
-    getLastVisitDate();
+    getLastVisit();
 
-    addRemoveNews(document.getElementById("usnews"), usnews_url); // init the us news
+    filterNews(document.getElementById("usnews"), usnews_url); // init the us news
 }
 
 // Display the last date you visited and store the current date for next time
-function getLastVisitDate() {
+function getLastVisit() {
     if (typeof(Storage) !== "undefined") {
         var dateField = document.getElementById("lastVisit");
 
@@ -55,7 +55,7 @@ function parseEntries(values, id) {
     $("#content").fadeIn(500);
 }
 
-function addRemoveNews(checkbox, url) {
+function filterNews(checkbox, url) {
     if (checkbox.checked) {
         $.ajax({
             type: "GET",
